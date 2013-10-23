@@ -21,15 +21,14 @@ public class MainActivity extends Activity {
 		@Override
 		protected ApiResponse doInBackground(TextView... arg0) {
 			status = arg0[0];
-			ApiResponse resp = AdrenalineIo.post(API.LOGIN_CHALLENGE, new JSONObject(), true); 
+			ApiResponse resp = AdrenalineIo.getAppDetails();
 			return resp;
 		}
 		
 		@Override
 		protected void onPostExecute(ApiResponse resp) {
 			if (resp.ok()) {
-				status.setText("All systems are go!");
-				Log.d(TAG, "All systems are go!");
+				status.setText("Connection Successful. Welcome to: " + resp.getString("name"));
 			} else {
 				status.setText("Error -> " + resp.status());
 				Log.e(TAG, "Error -> " + resp.status());
