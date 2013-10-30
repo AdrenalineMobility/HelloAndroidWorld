@@ -1,30 +1,21 @@
-package com.adrenalinemobility.helloandroidworld;
+package io.adrenaline.android.helloworld;
 
-import org.json.JSONObject;
-
-import io.adrenaline.API;
 import io.adrenaline.AdrenalineIo;
 import io.adrenaline.ApiResponse;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "HelloAndroidWorld";
-	
-	private class PingApiServer extends AsyncTask<TextView, Void, ApiResponse> {
-		TextView status = null;
-		
-		@Override
-		protected ApiResponse doInBackground(TextView... arg0) {
-			status = arg0[0];
-			ApiResponse resp = AdrenalineIo.getAppDetails();
-			return resp;
-		}
-		
+
+	private TextView status;
+
+	private class PingApiServer extends AsyncTask<Void, Void, ApiResponse> {
+
 		@Override
 		protected void onPostExecute(ApiResponse resp) {
 			if (resp.ok()) {
@@ -34,19 +25,23 @@ public class MainActivity extends Activity {
 				Log.e(TAG, "Error -> " + resp.status());
 			}
 		}
-		
+
+		@Override
+		protected ApiResponse doInBackground(Void... params) {
+			return AdrenalineIo.getAppDetails();
+		}
+
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		AdrenalineIo.init(getApplicationContext());
-
-		TextView status = (TextView) findViewById(R.id.textView1);
+		status = (TextView) findViewById(R.id.textView1);
 		status.setText("Checking server...");
-		new PingApiServer().execute(status);
+
+		// check adrenaline.io server
+		new PingApiServer().execute();
 	}
 
 	@Override
